@@ -82,7 +82,7 @@ sideStoryEdgeList = dict()
 
 for anime in completedList.values():
 	for edge in anime['media']['relations']['edges']:
-		if edge['relationType'] == 'SIDE_STORY' and edge['node']['status'] == 'FINISHED' and edge['node']['id'] not in completedList and edge['node']['format'] in allowedFormat:
+		if edge['relationType'] == 'SIDE_STORY' and edge['node']['status'] == 'FINISHED' and edge['node']['id'] not in completedList and edge['node']['id'] not in droppedList and edge['node']['format'] in allowedFormat:
 			sideStoryEdgeList[edge['node']['id']] = edge['node']
 
 print('Unwatched side-stories (may be dublicates):', len(sequelEdgeList))
