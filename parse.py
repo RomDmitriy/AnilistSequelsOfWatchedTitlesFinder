@@ -4,6 +4,7 @@ from gql.transport.aiohttp import AIOHTTPTransport
 from sys import argv
 
 name = argv[1]
+allowedFormat = ['TV', 'TV_SHORT', 'MOVIE', 'SPECIAL', 'OVA', 'ONA']
 
 transport = AIOHTTPTransport(url="https://graphql.anilist.co/")
 
@@ -57,21 +58,22 @@ for list in result:
 print('Total:', len(totalList))
 
 completedList = dict()
+droppedList = dict()
 
 for list in result:
 	for anime in list['entries']:
-	    if list['status'] == "COMPLETED":
-		    completedList[anime['media']['id']] = anime
+		if list['status'] == 'COMPLETED':
+			completedList[anime['media']['id']] = anime
+		if list['status'] == 'DROPPED':
+			droppedList[anime['media']['id']] = anime
 		
 print('Completed:', len(completedList))
-		
-allowedFormat = ['TV', 'TV_SHORT', 'MOVIE', 'SPECIAL', 'OVA', 'ONA']
 
 sequelEdgeList = dict()
 
 for anime in completedList.values():
 	for edge in anime['media']['relations']['edges']:
-		if edge['relationType'] == "SEQUEL" and edge['node']['status'] == 'FINISHED' and edge['node']['id'] not in completedList and edge['node']['format'] in allowedFormat:
+		if edge['relationType'] == 'SEQUEL' and edge['node']['status'] == 'FINISHED' and edge['node']['id'] not in completedList and edge['node']['id'] not in droppedList and edge['node']['format'] in allowedFormat:
 			sequelEdgeList[edge['node']['id']] = edge['node']
 
 print('Unwatched sequel (may be dublicates):', len(sequelEdgeList))
@@ -80,7 +82,7 @@ sideStoryEdgeList = dict()
 
 for anime in completedList.values():
 	for edge in anime['media']['relations']['edges']:
-		if edge['relationType'] == "SIDE_STORY" and edge['node']['status'] == 'FINISHED' and edge['node']['id'] not in completedList and edge['node']['format'] in allowedFormat:
+		if edge['relationType'] == 'SIDE_STORY' and edge['node']['status'] == 'FINISHED' and edge['node']['id'] not in completedList and edge['node']['format'] in allowedFormat:
 			sideStoryEdgeList[edge['node']['id']] = edge['node']
 
 print('Unwatched side-stories (may be dublicates):', len(sequelEdgeList))
