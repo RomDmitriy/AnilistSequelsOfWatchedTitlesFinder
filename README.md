@@ -5,7 +5,8 @@
 Этот хардкодный скрипт спарсит не просмотренные продолжения и side-stories.
 
 ## Использование
-Необходима Python-библиотека https://github.com/graphql-python/gql, а также подходящая ей версия Python.
+Установка необходимых пакетов
+`python -m venv .venv; source .venv/bin/activate; pip install gql aiohttp`
 Скрипт запускается командой:
 `python parse.py НИКНЕЙМ_ПОЛЬЗОВАТЕЛЯ`.
 
